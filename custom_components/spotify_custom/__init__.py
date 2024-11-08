@@ -78,7 +78,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: SpotifyConfigEntry) -> b
         LOGGER,
         name=f"{entry.title} Devices",
         config_entry=entry,
-        update_interval=timedelta(minutes=5),
+        update_interval=timedelta(seconds=150),
         update_method=_update_devices,
     )
     await device_coordinator.async_config_entry_first_refresh()
