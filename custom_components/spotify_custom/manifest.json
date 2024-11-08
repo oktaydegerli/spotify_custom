@@ -4,8 +4,10 @@
   "codeowners": ["@oktaydegerli"],
   "config_flow": true,
   "dependencies": ["application_credentials"],
+  "integration_type": "service",
   "iot_class": "cloud_polling",
   "loggers": ["spotipy"],
   "requirements": ["spotifyaio==0.8.5"],
-  "zeroconf": ["_spotify-connect._tcp.local."]
+  "zeroconf": ["_spotify-connect._tcp.local."],
+  "version": "1.0.0"
 }
