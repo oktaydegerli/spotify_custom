@@ -1,0 +1,26 @@
+update_devices:
+  name: Update Devices
+  description: Update Spotify Connect Device List
+search:
+  name: Search Spotify
+  description: Search Spotify
+  fields:
+    query:
+      name: Search Term
+      description: Search Term
+      example: The Beatles
+      required: true
+      selector:
+        text:
+    search_type:
+      name: Search Type
+      description: General or Artist Profile Search?
+      required: true
+      example: true
+      selector:
+        select:
+          options:
+            - label: Artist Profile
+              value: "artist"
+            - label: General Search
+              value: "general"

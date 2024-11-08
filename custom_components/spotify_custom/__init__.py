@@ -20,7 +20,7 @@ from homeassistant.helpers.config_entry_oauth2_flow import (
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .browse_media import async_browse_media
-from .const import DOMAIN, LOGGER, SPOTIFY_SCOPES, SERVICE_UPDATE_DEVICES
+from .const import DOMAIN, LOGGER, SPOTIFY_SCOPES, SERVICE_UPDATE_DEVICES, SERVICE_SEARCH
 from .coordinator import SpotifyConfigEntry, SpotifyCoordinator
 from .models import SpotifyData
 from .util import (
@@ -85,10 +85,38 @@ async def async_setup_entry(hass: HomeAssistant, entry: SpotifyConfigEntry) -> b
 
 
     async def _handle_update_devices_service(call: ServiceCall) -> None:
-        """Handle the service call."""
         await device_coordinator.async_refresh()
 
     hass.services.async_register(DOMAIN, SERVICE_UPDATE_DEVICES, _handle_update_devices_service)
+
+
+    async def _handle_search(call: ServiceCall) -> None:
+        # query = call.data.get("query")
+        results = ["sonuc1", "sonuc2", "sonuc3"]
+        await hass.services.async_set_results(call.id, {"results": results})
+
+    hass.services.async_register(DOMAIN, SERVICE_SEARCH, _handle_search)
+
+
+    # async def _handle_search_service(call: ServiceCall) -> dict:
+    #    """Spotify'da arama yapar"""
+    #    query = call.data.get("query")
+    #    search_type = call.data.get("search_type", "track")
+    #    results = await _spotify_search(session.token[CONF_ACCESS_TOKEN], query, search_type)
+    #    return results
+    
+    # hass.services.async_register(DOMAIN, "search", _handle_search_service)
+
+    # async def _spotify_search(access_token: str, query: str, search_type: str):
+    #    if search_type is "artist":
+    #        type_query = "artist"
+    #    else:
+    #        type_query = "artist,track,playlist"
+    #    url = f"https://api.spotify.com/v1/search?q={query}&type={type_query}&limit=10"
+    #    headers = {"Authorization": f"Bearer {access_token}"}
+    #    async with aiohttp.ClientSession() as session:
+    #        async with session.get(url, headers=headers) as response:
+    #            return await response.json()
 
 
     entry.runtime_data = SpotifyData(coordinator, session, device_coordinator)

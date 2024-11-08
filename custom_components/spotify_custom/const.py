@@ -38,3 +38,4 @@ PLAYABLE_MEDIA_TYPES = [
 ]
 
 SERVICE_UPDATE_DEVICES = "update_devices"
+SERVICE_SEARCH = "search"
