@@ -10,7 +10,7 @@ from spotifyaio import Device, SpotifyClient, SpotifyConnectionError
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_ACCESS_TOKEN, Platform
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.config_entry_oauth2_flow import (
@@ -20,7 +20,7 @@ from homeassistant.helpers.config_entry_oauth2_flow import (
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .browse_media import async_browse_media
-from .const import DOMAIN, LOGGER, SPOTIFY_SCOPES
+from .const import DOMAIN, LOGGER, SPOTIFY_SCOPES, SERVICE_UPDATE_DEVICES
 from .coordinator import SpotifyConfigEntry, SpotifyCoordinator
 from .models import SpotifyData
 from .util import (
@@ -78,10 +78,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: SpotifyConfigEntry) -> b
         LOGGER,
         name=f"{entry.title} Devices",
         config_entry=entry,
-        update_interval=timedelta(seconds=150),
+        update_interval=timedelta(minutes=5),
         update_method=_update_devices,
     )
     await device_coordinator.async_config_entry_first_refresh()
+
+
+    async def _handle_update_devices_service(call: ServiceCall) -> None:
+        """Handle the service call."""
+        await device_coordinator.async_refresh()
+
+    hass.services.async_register(DOMAIN, SERVICE_UPDATE_DEVICES, _handle_update_devices_service)
+
 
     entry.runtime_data = SpotifyData(coordinator, session, device_coordinator)
 

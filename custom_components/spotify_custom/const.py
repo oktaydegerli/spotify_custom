@@ -36,3 +36,5 @@ PLAYABLE_MEDIA_TYPES = [
     MEDIA_TYPE_SHOW,
     MediaType.TRACK,
 ]
+
+SERVICE_UPDATE_DEVICES = "update_devices"
